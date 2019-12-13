@@ -19,7 +19,7 @@ def find_nth(text, substring, n):
 
 def main ():
     RSS_URL = 'https://www.ft.com/?format=rss'
-    text = feedparser.parse(RSS_URL)['items'][5]['title']
+    text = feedparser.parse(RSS_URL)['items'][0]['title']
     model, tokenizer = text_generation.model_tokenizer_initializer('distilgpt2')
     nlp = spacy.load('en_core_web_sm')
     doc = nlp(text)
@@ -32,12 +32,15 @@ def main ():
     list_of_links = picture_scraping.get_links(url)
     img_links = picture_scraping.un_googlify_img_links(list_of_links)
     random_index = random.random_integers(0, len(img_links))
-    image = img_links[random_index]
+    try:
+        image = img_links[random_index]
+    except IndexError:
+        raise Exception('No images were found.')
 
     try:
         urllib.request.urlretrieve(image, f'./Articles/file01')
     except urllib.error.HTTPError:
-        print('Forbidden img link, try again!')
+        raise Exception('Forbidden img link, try again!')
 
     with open('./Articles/Article Template.htm') as article:
         txt = article.read()
@@ -49,7 +52,7 @@ def main ():
     new_img = soup.new_tag('img', class_='pure-img-responsive', src='./file01')
     soup.body.a.append(new_img)
 
-    article = text_generation.generate_text(model, tokenizer, 250, prompt=text, temperature=1)
+    article = text_generation.generate_text(model, tokenizer, 450, top_p=0.8, prompt=text, temperature=1.2)
     slice_index = find_nth(article, '.', 4)
     first_part = article[0:slice_index+1]
     second_part = article[slice_index+1:]
