@@ -13,6 +13,7 @@ def render_url(url):
     """starts a HTMLSession and renders the page."""
     session = HTMLSession()
     r = session.get(url)
+    r.html.render()
     return r
 
 
