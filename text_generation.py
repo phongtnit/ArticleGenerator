@@ -65,7 +65,7 @@ def sample_sequence(model, length, context, num_samples=1, temperature=1, top_k=
     :param length: Number of words to generate.
     :param context: Encoded text.
     :param num_samples: Number of complete generations that should be performed.
-    :param temperature: Creativity of the generated text. 0 implies greedy sampling
+    :param temperature: Creativity of the generated text. 0 implies greedy sampling.
     :param top_k: Keep only top k tokens with highest probability (top-k filtering).
     :param top_p: Keep the top tokens with cumulative probability >= top_p (nucleus filtering).
     :param repetition_penalty:
